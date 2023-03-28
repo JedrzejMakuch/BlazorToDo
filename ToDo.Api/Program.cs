@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ToDo.Data.Data;
+using ToDo.Repositories.Repositories;
+using ToDo.Repositories.Repositories.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<BlazorToDoDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("BlazorToDoDbContext")));
+builder.Services.AddScoped<IToDoItemRepository, ToDoItemRepository>();
 
 var app = builder.Build();
 
