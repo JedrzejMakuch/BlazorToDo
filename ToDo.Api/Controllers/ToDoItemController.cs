@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ToDo.Api.Extensions;
+using ToDo.Api.Services.Services.Contracts;
 using ToDo.Models.Dtos;
 using ToDo.Models.Payloads;
-using ToDo.Repositories.Repositories.Contracts;
 
 namespace ToDo.Api.Controllers
 {
@@ -10,11 +10,11 @@ namespace ToDo.Api.Controllers
     [ApiController]
     public class ToDoItemController : ControllerBase
     {
-        private readonly IToDoItemRepository toDoItemRepository;
+        private readonly IToDoItemService toDoItemService;
 
-        public ToDoItemController(IToDoItemRepository toDoItemRepository)
+        public ToDoItemController(IToDoItemService toDoItemService)
         {
-            this.toDoItemRepository = toDoItemRepository;
+            this.toDoItemService = toDoItemService;
         }
 
         [HttpGet]
@@ -22,7 +22,7 @@ namespace ToDo.Api.Controllers
         {
             try
             {
-                var items = await this.toDoItemRepository.GetItems();
+                var items = await this.toDoItemService.GetItems();
                 if(items == null)
                 {
                     return NotFound();
@@ -44,7 +44,7 @@ namespace ToDo.Api.Controllers
         {
             try
             {
-                var item = await this.toDoItemRepository.GetItem(id);
+                var item = await this.toDoItemService.GetItem(id);
                 if(item == null)
                 {
                     return NotFound();
@@ -66,7 +66,7 @@ namespace ToDo.Api.Controllers
         {
             try
             {
-                var newToDoItem = await this.toDoItemRepository.PostItem(toDoItemPayload);
+                var newToDoItem = await this.toDoItemService.PostItem(toDoItemPayload);
                 if(newToDoItem == null)
                 {
                     throw new Exception($"Something went wrong");
@@ -91,13 +91,13 @@ namespace ToDo.Api.Controllers
                     return BadRequest();
                 }
 
-                var item = await this.toDoItemRepository.GetItem(id);
+                var item = await this.toDoItemService.GetItem(id);
                 if(item == null)
                 {
                     
                 }
 
-                await this.toDoItemRepository.DeleteItem(item);
+                await this.toDoItemService.DeleteItem(item);
                 return Ok();
             }
             catch (Exception)
@@ -114,13 +114,13 @@ namespace ToDo.Api.Controllers
                 return BadRequest();
             }
 
-            var item = await this.toDoItemRepository.GetItem(id);
+            var item = await this.toDoItemService.GetItem(id);
             if(item == null)
             {
                 return NotFound($"ToDoItem with Id: {id} does not exist.");
             }
 
-            var updatedItem = await this.toDoItemRepository.UpdateItem(item, toDoItemPayload);
+            var updatedItem = await this.toDoItemService.UpdateItem(item, toDoItemPayload);
             var updatedItemDto = updatedItem.ConvertToDto();
             return Ok(updatedItemDto);
         }

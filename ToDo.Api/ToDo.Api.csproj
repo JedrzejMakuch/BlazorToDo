@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ToDo.Api.Services\ToDo.Api.Services.csproj" />
     <ProjectReference Include="..\ToDo.Data\ToDo.Data.csproj" />
     <ProjectReference Include="..\ToDo.Repositories\ToDo.Repositories.csproj" />
   </ItemGroup>
