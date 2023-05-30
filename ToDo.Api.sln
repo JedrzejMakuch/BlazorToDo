@@ -11,9 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDo.Data", "ToDo.Data\ToDo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDo.Models", "ToDo.Models\ToDo.Models.csproj", "{32055C90-D647-446E-9DE7-F9C6D3995249}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDo.Services", "ToDo.Services\ToDo.Services.csproj", "{AAAFF0A0-3A30-4EC0-98AE-F885E9EF1A07}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDo.Web.Services", "ToDo.Services\ToDo.Web.Services.csproj", "{AAAFF0A0-3A30-4EC0-98AE-F885E9EF1A07}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDo.Repositories", "ToDo.Repositories\ToDo.Repositories.csproj", "{87879542-ACC5-4487-95E2-6F2922A9C650}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDo.Api.Services", "ToDo.Api.Services\ToDo.Api.Services.csproj", "{CF40C538-513A-41D2-939A-9D3873705CB3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{87879542-ACC5-4487-95E2-6F2922A9C650}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87879542-ACC5-4487-95E2-6F2922A9C650}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87879542-ACC5-4487-95E2-6F2922A9C650}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF40C538-513A-41D2-939A-9D3873705CB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF40C538-513A-41D2-939A-9D3873705CB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF40C538-513A-41D2-939A-9D3873705CB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF40C538-513A-41D2-939A-9D3873705CB3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

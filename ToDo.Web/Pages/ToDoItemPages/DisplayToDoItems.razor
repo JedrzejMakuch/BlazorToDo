@@ -1,0 +1,15 @@
+﻿@inherits DisplayToDoItemsBase
+@using BootstrapBlazor.Components
+
+@foreach (var item in ToDoItemDtos)
+{
+    <Card IsCollapsible="true" HeaderText="@item.Name" class="mb-2" Collapsed="true" IsShadow="true">
+        <HeaderTemplate>
+            <a class="btn btn-info" href="/ToDoItemDetails/@item.Id">Details</a>
+            @*<a class="btn btn-danger" href="/EditToDoItem/@item.Id">Edit</a>*@
+        </HeaderTemplate>
+        <BodyTemplate>
+            @item.Description
+        </BodyTemplate>
+    </Card>
+}

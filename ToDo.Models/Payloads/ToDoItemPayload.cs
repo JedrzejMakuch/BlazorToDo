@@ -1,8 +1,12 @@
-﻿namespace ToDo.Models.Payloads
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ToDo.Models.Payloads
 {
     public class ToDoItemPayload
     {
-        public string Name { get; set; }    
+        [Required(ErrorMessage = "Name is required.")]
+        public string Name { get; set; }
+        [Required(ErrorMessage = "Description is required.")]
         public string Description { get; set; }
     }
 }
