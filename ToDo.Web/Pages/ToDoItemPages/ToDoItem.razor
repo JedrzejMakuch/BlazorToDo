@@ -12,14 +12,15 @@
 else
 {
     var toDoItemsCount = ToDoItemDtos.Count();
-    <div class="card">
-        <div class="card-header justify-content-between">
+    
+    <div class="">
+        <div class="d-flex justify-content-between">
             <h3>
                 ToDo Items
             </h3>
-            <a href="/AddToDoItem" class="btn btn-primary">New ToDo</a>
+            <a href="/AddToDoItem" class="btn btn-primary m-2">New ToDo</a>
         </div>
-        <div class="card-body">
+        <div class="">
             @if (toDoItemsCount > 0)
             {
                     <DisplayToDoItems ToDoItemDtos="@ToDoItemDtos" />

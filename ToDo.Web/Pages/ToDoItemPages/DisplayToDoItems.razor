@@ -1,15 +1,53 @@
 ﻿@inherits DisplayToDoItemsBase
 @using BootstrapBlazor.Components
+@using ToDo.Web.Pages.ToDoItemPages.Modals
 
-@foreach (var item in ToDoItemDtos)
+@{
+    string directionUp = "up";
+    string directionDown = "down";
+    }
+
+<div class="row flex-xl-row flex-column">
+    @foreach (Api.Shared.Enums.ToDoItemStatus status in Enum.GetValues(typeof(Api.Shared.Enums.ToDoItemStatus)))
+    {
+        <div class="col border rounded my-1 mx-xl-1">
+            <div class="border rounded my-2">
+                <p class="p-2 mb-0 fs-6">@status</p>
+            </div>
+            @foreach (var item in FilteredStatus(status))
+            {
+                <Card IsCollapsible="true" HeaderText="@item.Name" class="mb-2" Collapsed="true" IsShadow="true">
+                    <HeaderTemplate>
+                            
+                    </HeaderTemplate>
+                    <BodyTemplate>
+                        @item.Description
+                    </BodyTemplate>
+                    <FooterTemplate>
+                        <div class="d-flex justify-content-between gap-2">
+                            <div class="">
+                                <button class="btn btn-danger" @onclick="() => OpenDeleteDialog(item.Id)">Delete</button>
+                                <a href="EditToDoItem/@item.Id" class="btn btn-secondary">Edit</a>
+                            </div>
+                            <div class="d-flex justify-content-between gap-2">
+                                @if (item.Status != Api.Shared.Enums.ToDoItemStatus.New)
+                                {
+                                    <h4 class="m-0"><a class="bi bi-arrow-left-circle-fill" @onclick="() => ChangeStatus(item.Id, directionDown)"></a></h4>
+                                }
+                                @if (item.Status != Api.Shared.Enums.ToDoItemStatus.Completed)
+                                {
+                                    <h4 class="m-0"><a class="bi bi-arrow-right-circle-fill" @onclick="() => ChangeStatus(item.Id, directionUp)"></a></h4>
+                                }
+                            </div>
+                        </div>
+                    </FooterTemplate>
+                </Card>
+
+            }   
+        </div>
+    }
+</div>
+@if(DeleteDialogOpen)
 {
-    <Card IsCollapsible="true" HeaderText="@item.Name" class="mb-2" Collapsed="true" IsShadow="true">
-        <HeaderTemplate>
-            <a class="btn btn-info" href="/ToDoItemDetails/@item.Id">Details</a>
-            @*<a class="btn btn-danger" href="/EditToDoItem/@item.Id">Edit</a>*@
-        </HeaderTemplate>
-        <BodyTemplate>
-            @item.Description
-        </BodyTemplate>
-    </Card>
+    <DeleteItemModal OnClose="@OnDeleteDialogClose" />
 }

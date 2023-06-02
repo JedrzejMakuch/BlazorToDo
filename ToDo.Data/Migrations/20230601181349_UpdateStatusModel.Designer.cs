@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ToDo.Data.Data;
 
@@ -10,9 +11,10 @@ using ToDo.Data.Data;
 namespace ToDo.Data.Migrations
 {
     [DbContext(typeof(BlazorToDoDbContext))]
-    partial class BlazorToDoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230601181349_UpdateStatusModel")]
+    partial class UpdateStatusModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,12 +39,42 @@ namespace ToDo.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Status")
+                    b.Property<int>("ToDoItemStatusId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ToDoItemStatusId");
+
                     b.ToTable("ToDoItems");
+                });
+
+            modelBuilder.Entity("ToDo.Models.Entities.ToDoItemStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ToDoItemStatuses");
+                });
+
+            modelBuilder.Entity("ToDo.Models.Entities.ToDoItem", b =>
+                {
+                    b.HasOne("ToDo.Models.Entities.ToDoItemStatus", "ToDoItemStatus")
+                        .WithMany()
+                        .HasForeignKey("ToDoItemStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ToDoItemStatus");
                 });
 #pragma warning restore 612, 618
         }

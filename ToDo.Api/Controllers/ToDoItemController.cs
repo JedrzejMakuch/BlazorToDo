@@ -23,7 +23,7 @@ namespace ToDo.Api.Controllers
             try
             {
                 var items = await this.toDoItemService.GetItems();
-                if(items == null)
+                if (items == null)
                 {
                     return NotFound();
                 }
@@ -45,7 +45,7 @@ namespace ToDo.Api.Controllers
             try
             {
                 var item = await this.toDoItemService.GetItem(id);
-                if(item == null)
+                if (item == null)
                 {
                     return NotFound();
                 }
@@ -67,7 +67,7 @@ namespace ToDo.Api.Controllers
             try
             {
                 var newToDoItem = await this.toDoItemService.PostItem(toDoItemPayload);
-                if(newToDoItem == null)
+                if (newToDoItem == null)
                 {
                     throw new Exception($"Something went wrong");
                 }
@@ -86,15 +86,15 @@ namespace ToDo.Api.Controllers
         {
             try
             {
-                if(id == null)
+                if (id == null)
                 {
                     return BadRequest();
                 }
 
                 var item = await this.toDoItemService.GetItem(id);
-                if(item == null)
+                if (item == null)
                 {
-                    
+
                 }
 
                 await this.toDoItemService.DeleteItem(item);
@@ -109,13 +109,13 @@ namespace ToDo.Api.Controllers
         [HttpPut("{id:int}")]
         public async Task<ActionResult<ToDoItemDto>> UpdateItem([FromBody] ToDoItemPayload toDoItemPayload, int id)
         {
-            if(id == null)
+            if (id == null)
             {
                 return BadRequest();
             }
 
             var item = await this.toDoItemService.GetItem(id);
-            if(item == null)
+            if (item == null)
             {
                 return NotFound($"ToDoItem with Id: {id} does not exist.");
             }
@@ -125,5 +125,29 @@ namespace ToDo.Api.Controllers
             return Ok(updatedItemDto);
         }
 
+        [HttpPut("{id:int}/{direction}")]
+        public async Task<ActionResult<ToDoItemDto>> ChangeStatus(int id, string direction)
+        {
+            var toDoItem = await this.toDoItemService.GetItem(id);
+            if(toDoItem == null)
+            {
+                return NotFound();
+            }
+
+            var toDo = await this.toDoItemService.ChangeStatus(id, direction);
+            var toDoDto = toDo.ConvertToDto();
+            return Ok(toDoDto);
+
+            //var toDo = direction == "up" ? await this.toDoItemService.StatusUp(id, direction) : await this.toDoItemService.StatusDown(id, direction);
+            //if (direction == "up")
+            //{
+            //    await this.toDoItemService.StatusUp(id, direction);
+            //} else if(direction == "down")
+            //{
+            //    await this.toDoItemService.StatusDown(id, direction);
+            //}
+            //var convertedToDo = toDo.ConvertToDto();
+            //return Ok(convertedToDo);
+        }
     }
 }

@@ -12,6 +12,7 @@ namespace ToDo.Api.Extensions
                 Id = x.Id,
                 Name = x.Name,
                 Description= x.Description,
+                Status= x.Status,
             }).ToList();
 
             return toDoItemDtos;
@@ -24,6 +25,7 @@ namespace ToDo.Api.Extensions
                 Id = toDoItem.Id,
                 Name = toDoItem.Name,
                 Description = toDoItem.Description,
+                Status = toDoItem.Status,
             };
 
             return toDoItemDto;

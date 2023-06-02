@@ -13,6 +13,13 @@ namespace ToDo.Api.Services.Services
         {
             this.toDoItemRepository = toDoItemRepository;
         }
+
+        public async Task<ToDoItem> ChangeStatus(int id, string direction)
+        {
+            var toDo = await this.toDoItemRepository.ChangeStatus(id, direction);
+            return toDo;
+        }
+
         public async Task DeleteItem(ToDoItem toDoItem)
         {
             await this.toDoItemRepository.DeleteItem(toDoItem);
@@ -35,6 +42,18 @@ namespace ToDo.Api.Services.Services
             var newItem = await this.toDoItemRepository.PostItem(toDoItemPayload);
             return newItem;
         }
+
+        //public async Task<ToDoItem> StatusDown(int id, string direction)
+        //{
+        //    var toDo = await this.toDoItemRepository.StatusDown(id, direction);
+        //    return toDo;
+        //}
+
+        //public async Task<ToDoItem> StatusUp(int id, string direction)
+        //{
+        //    var toDo = await this.toDoItemRepository.StatusUp(id, direction);
+        //    return toDo;
+        //}
 
         public async Task<ToDoItem> UpdateItem(ToDoItem toDoItem, ToDoItemPayload toDoItemPayload)
         {

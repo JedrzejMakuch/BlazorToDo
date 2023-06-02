@@ -9,6 +9,5 @@ namespace ToDo.Data.Data
             :base(options)
         {}
         public DbSet<ToDoItem> ToDoItems { get; set; }
-        public DbSet<ToDoItemStatus> ToDoItemStatuses { get; set; }
     }
 }

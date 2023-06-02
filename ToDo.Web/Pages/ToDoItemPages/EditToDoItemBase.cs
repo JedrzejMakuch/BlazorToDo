@@ -61,7 +61,7 @@ namespace ToDo.Web.Pages.ToDoItemPages
                 {
                     name = string.Empty;
                     description = string.Empty;
-                    navigationManager.NavigateTo($"ToDoItemDetails/{Id}");
+                    navigationManager.NavigateTo($"/");
                 }
                 else
                 {

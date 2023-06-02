@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ToDo.Data.Data;
 
@@ -10,9 +11,10 @@ using ToDo.Data.Data;
 namespace ToDo.Data.Migrations
 {
     [DbContext(typeof(BlazorToDoDbContext))]
-    partial class BlazorToDoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230601192405_AddToToDoItemStatusEnum")]
+    partial class AddToToDoItemStatusEnum
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,8 +39,9 @@ namespace ToDo.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

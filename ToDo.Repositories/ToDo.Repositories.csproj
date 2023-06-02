@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ToDo.Data\ToDo.Data.csproj" />
     <ProjectReference Include="..\ToDo.Models\ToDo.Models.csproj" />
+    <ProjectReference Include="..\ToDoApi.Shared\ToDo.Api.Shared.csproj" />
   </ItemGroup>
 
 </Project>
