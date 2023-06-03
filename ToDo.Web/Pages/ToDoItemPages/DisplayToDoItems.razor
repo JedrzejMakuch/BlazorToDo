@@ -5,7 +5,7 @@
 @{
     string directionUp = "up";
     string directionDown = "down";
-    }
+}
 
 <div class="row flex-xl-row flex-column">
     @foreach (Api.Shared.Enums.ToDoItemStatus status in Enum.GetValues(typeof(Api.Shared.Enums.ToDoItemStatus)))
@@ -16,17 +16,27 @@
             </div>
             @foreach (var item in FilteredStatus(status))
             {
-                <Card IsCollapsible="true" HeaderText="@item.Name" class="mb-2" Collapsed="true" IsShadow="true">
-                    <HeaderTemplate>
-                            
-                    </HeaderTemplate>
+                <Card IsCollapsible="true" class="mb-2" HeaderText="@item.Name" Collapsed="true" IsShadow="true">
                     <BodyTemplate>
-                        @item.Description
+                        <div class="fw-bold mb-2">
+                            @item.Description
+                        </div>
+                        <div>
+                            <div>
+                                <span class="text-secondary">Status new:</span> @item.StatusNew
+                            </div>
+                            <div>
+                                <span class="text-secondary">Status in progress</span> @item.StatusInProgress
+                            </div>
+                            <div>
+                                <span class="text-secondary">Completed:</span> @item.StatusCompleted
+                            </div>
+                        </div>
                     </BodyTemplate>
                     <FooterTemplate>
                         <div class="d-flex justify-content-between gap-2">
                             <div class="">
-                                <button class="btn btn-danger" @onclick="() => OpenDeleteDialog(item.Id)">Delete</button>
+                                <button class="btn btn-danger" @onclick="() => OpenDeleteDialog(item)">Delete</button>
                                 <a href="EditToDoItem/@item.Id" class="btn btn-secondary">Edit</a>
                             </div>
                             <div class="d-flex justify-content-between gap-2">
@@ -42,12 +52,11 @@
                         </div>
                     </FooterTemplate>
                 </Card>
-
-            }   
+            }
         </div>
     }
 </div>
-@if(DeleteDialogOpen)
+@if (DeleteDialogOpen)
 {
     <DeleteItemModal OnClose="@OnDeleteDialogClose" />
 }

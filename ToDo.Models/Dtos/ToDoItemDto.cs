@@ -8,5 +8,8 @@ namespace ToDo.Models.Dtos
         public string Name { get; set; }
         public string Description { get; set; }
         public ToDoItemStatus Status { get; set; }
+        public DateTime? StatusNew { get; set; }
+        public DateTime? StatusInProgress { get; set; }
+        public DateTime? StatusCompleted { get; set; }
     }
 }

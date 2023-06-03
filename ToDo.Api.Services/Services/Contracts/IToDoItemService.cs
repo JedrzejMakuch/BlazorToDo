@@ -11,7 +11,5 @@ namespace ToDo.Api.Services.Services.Contracts
         Task DeleteItem(ToDoItem toDoItem);
         Task<ToDoItem> UpdateItem(ToDoItem toDoItem, ToDoItemPayload toDoItemPayload);
         Task<ToDoItem> ChangeStatus(int id, string direction);
-        //Task<ToDoItem> StatusUp(int id, string direction);
-        //Task<ToDoItem> StatusDown(int id, string direction);
     }
 }

@@ -137,17 +137,6 @@ namespace ToDo.Api.Controllers
             var toDo = await this.toDoItemService.ChangeStatus(id, direction);
             var toDoDto = toDo.ConvertToDto();
             return Ok(toDoDto);
-
-            //var toDo = direction == "up" ? await this.toDoItemService.StatusUp(id, direction) : await this.toDoItemService.StatusDown(id, direction);
-            //if (direction == "up")
-            //{
-            //    await this.toDoItemService.StatusUp(id, direction);
-            //} else if(direction == "down")
-            //{
-            //    await this.toDoItemService.StatusDown(id, direction);
-            //}
-            //var convertedToDo = toDo.ConvertToDto();
-            //return Ok(convertedToDo);
         }
     }
 }

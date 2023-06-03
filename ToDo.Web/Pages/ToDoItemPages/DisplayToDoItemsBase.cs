@@ -19,25 +19,12 @@ namespace ToDo.Web.Pages.ToDoItemPages
 
         public ToDoItemDto ToDoItemDto { get; set; }
 
+        private ToDoItemDto ToDoItemToDelete { get; set; }
+
         [Parameter]
         public IEnumerable<ToDoItemDto> ToDoItemDtos { get; set; }
         public List<ToDoItemDto> FilteredStatus(ToDoItemStatus status) =>
     ToDoItemDtos.Where(item => item.Status == status).ToList();
-
-        public async Task DeleteToDo(int id)
-        {
-            var response = await httpClient.DeleteAsync($"https://localhost:7265/api/ToDoItem/{id}");
-
-            if (response.IsSuccessStatusCode)
-            {
-                System.Console.WriteLine(response.StatusCode);
-                ToDoItemDtos = await ToDoItemService.GetItems();
-            }
-            else
-            {
-                System.Console.WriteLine(response.StatusCode);
-            }
-        }
 
         public async Task ChangeStatus(int id, string direction)
         {
@@ -53,18 +40,33 @@ namespace ToDo.Web.Pages.ToDoItemPages
             {
                 ToDoItemDtos = await ToDoItemService.GetItems();
             }
-
         }
         public bool DeleteDialogOpen { get; set; }
 
-        public void OnDeleteDialogClose(bool accepted)
+        public async Task OnDeleteDialogClose(bool accepted)
         {
+            if(accepted)
+            {
+                var response = await httpClient.DeleteAsync($"https://localhost:7265/api/ToDoItem/{ToDoItemToDelete.Id}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    System.Console.WriteLine(response.StatusCode);
+                    ToDoItemToDelete = null;
+                    ToDoItemDtos = await ToDoItemService.GetItems();
+                }
+                else
+                {
+                    System.Console.WriteLine(response.StatusCode);
+                }
+            }
+
             DeleteDialogOpen = false;
         }
 
-        public void OpenDeleteDialog(int id)
+        public void OpenDeleteDialog(ToDoItemDto todo)
         {
-            DeleteToDo(id);
+            ToDoItemToDelete = todo;
             DeleteDialogOpen = true;
         }
     }

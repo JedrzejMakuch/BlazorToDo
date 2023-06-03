@@ -13,6 +13,9 @@ namespace ToDo.Api.Extensions
                 Name = x.Name,
                 Description= x.Description,
                 Status= x.Status,
+                StatusCompleted = x.StatusCompleted,
+                StatusInProgress = x.StatusInProgress,
+                StatusNew = x.StatusNew,
             }).ToList();
 
             return toDoItemDtos;
@@ -26,6 +29,9 @@ namespace ToDo.Api.Extensions
                 Name = toDoItem.Name,
                 Description = toDoItem.Description,
                 Status = toDoItem.Status,
+                StatusCompleted = toDoItem.StatusCompleted,
+                StatusInProgress = toDoItem.StatusInProgress,
+                StatusNew = toDoItem.StatusNew,
             };
 
             return toDoItemDto;

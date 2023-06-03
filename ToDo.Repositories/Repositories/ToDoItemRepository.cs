@@ -25,9 +25,11 @@ namespace ToDo.Repositories.Repositories
                 {
                     case ToDoItemStatus.New:
                         toDo.Status = ToDoItemStatus.InProgress;
+                        toDo.StatusInProgress = DateTime.Now;
                         break;
                     case ToDoItemStatus.InProgress:
                         toDo.Status = ToDoItemStatus.Completed;
+                        toDo.StatusCompleted = DateTime.Now;
                         break;
                     case ToDoItemStatus.Completed:
                         toDo.Status = ToDoItemStatus.Completed;
@@ -39,12 +41,19 @@ namespace ToDo.Repositories.Repositories
                 {
                     case ToDoItemStatus.New:
                         toDo.Status = ToDoItemStatus.New;
+                        toDo.StatusInProgress = null;
+                        toDo.StatusCompleted = null;
                         break;
                     case ToDoItemStatus.InProgress:
                         toDo.Status = ToDoItemStatus.New;
+                        toDo.StatusNew = DateTime.Now;
+                        toDo.StatusInProgress = null;
+                        toDo.StatusCompleted = null;
                         break;
                     case ToDoItemStatus.Completed:
                         toDo.Status = ToDoItemStatus.InProgress;
+                        toDo.StatusInProgress = DateTime.Now;
+                        toDo.StatusCompleted = null;
                         break;
                 }
             }
@@ -78,6 +87,7 @@ namespace ToDo.Repositories.Repositories
                 Name = toDoItemPayload.Name,
                 Description = toDoItemPayload.Description,
                 Status = ToDoItemStatus.New,
+                StatusNew = DateTime.Now,
             };
 
             if (item == null)
@@ -91,28 +101,6 @@ namespace ToDo.Repositories.Repositories
                 return result.Entity;
             }
         }
-
-        //public async Task<ToDoItem> StatusDown(int id, string direction)
-        //{
-        //    var item = await this.blazorToDoContext.ToDoItems.FirstOrDefaultAsync(x => x.Id == id);
-        //    if(direction == "up") 
-        //    {
-        //        item.Status++;
-        //    }
-        //    await this.blazorToDoContext.SaveChangesAsync();
-        //    return item;
-        //}
-
-        //public async Task<ToDoItem> StatusUp(int id, string direction)
-        //{
-        //    var item = await this.blazorToDoContext.ToDoItems.FirstOrDefaultAsync(x => x.Id == id);
-        //    if (direction == "down")
-        //    {
-        //        item.Status--;
-        //    }
-        //    await this.blazorToDoContext.SaveChangesAsync();
-        //    return item;
-        //}
 
         public async Task<ToDoItem> UpdateItem(ToDoItem toDoItem, ToDoItemPayload toDoItemPayload)
         {

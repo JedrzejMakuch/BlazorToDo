@@ -43,18 +43,6 @@ namespace ToDo.Api.Services.Services
             return newItem;
         }
 
-        //public async Task<ToDoItem> StatusDown(int id, string direction)
-        //{
-        //    var toDo = await this.toDoItemRepository.StatusDown(id, direction);
-        //    return toDo;
-        //}
-
-        //public async Task<ToDoItem> StatusUp(int id, string direction)
-        //{
-        //    var toDo = await this.toDoItemRepository.StatusUp(id, direction);
-        //    return toDo;
-        //}
-
         public async Task<ToDoItem> UpdateItem(ToDoItem toDoItem, ToDoItemPayload toDoItemPayload)
         {
             var updatedItem = await this.toDoItemRepository.UpdateItem(toDoItem, toDoItemPayload);
