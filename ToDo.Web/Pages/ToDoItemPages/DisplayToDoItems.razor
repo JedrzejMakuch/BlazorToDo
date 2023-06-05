@@ -10,9 +10,9 @@
 <div class="row flex-xl-row flex-column">
     @foreach (Api.Shared.Enums.ToDoItemStatus status in Enum.GetValues(typeof(Api.Shared.Enums.ToDoItemStatus)))
     {
-        <div class="col border rounded my-1 mx-xl-1">
-            <div class="border rounded my-2">
-                <p class="p-2 mb-0 fs-6">@status</p>
+        <div class="col border border-2 rounded my-1 mx-xl-1">
+            <div class="border border-2 rounded my-2">
+                <p class="p-2 mb-0 fs-6 text-white">@status</p>
             </div>
             @foreach (var item in FilteredStatus(status))
             {
@@ -37,16 +37,20 @@
                         <div class="d-flex justify-content-between gap-2">
                             <div class="">
                                 <button class="btn btn-danger" @onclick="() => OpenDeleteDialog(item)">Delete</button>
-                                <a href="EditToDoItem/@item.Id" class="btn btn-secondary">Edit</a>
+                                <a href="EditToDoItem/@item.Id" class="btn btn-info">Edit</a>
                             </div>
                             <div class="d-flex justify-content-between gap-2">
                                 @if (item.Status != Api.Shared.Enums.ToDoItemStatus.New)
                                 {
-                                    <h4 class="m-0"><a class="bi bi-arrow-left-circle-fill" @onclick="() => ChangeStatus(item.Id, directionDown)"></a></h4>
+                                    <h4 class="m-0"><a class="btn-sm btn btn-outline-danger" @onclick="() => ChangeStatus(item.Id, directionDown)">Undo</a></h4>
                                 }
-                                @if (item.Status != Api.Shared.Enums.ToDoItemStatus.Completed)
+                                @if (item.Status == Api.Shared.Enums.ToDoItemStatus.InProgress)
                                 {
-                                    <h4 class="m-0"><a class="bi bi-arrow-right-circle-fill" @onclick="() => ChangeStatus(item.Id, directionUp)"></a></h4>
+                                    <h4 class="m-0"><a class="btn-sm btn btn-success" @onclick="() => ChangeStatus(item.Id, directionUp)">Complete</a></h4>
+                                }
+                                @if (item.Status == Api.Shared.Enums.ToDoItemStatus.New)
+                                {
+                                    <h4 class="m-0"><a class="btn-sm btn btn-outline-success" @onclick="() => ChangeStatus(item.Id, directionUp)">Start TODO</a></h4>
                                 }
                             </div>
                         </div>
