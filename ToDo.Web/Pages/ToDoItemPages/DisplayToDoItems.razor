@@ -13,55 +13,52 @@
         <div class="col my-1 mx-xl-1">
             <Collapse IsAccordion="true">
                 <CollapseItems>
-            @*<div class="border border-2 rounded my-2">
-                <p class="p-2 mb-0 fs-6 text-white">@status</p>
-            </div>*@
-            <CollapseItem Text="@status.ToString()">
-            @foreach (var item in FilteredStatus(status))
-            {
-                <Card IsCollapsible="true" class="mb-2" HeaderText="@item.Name" Collapsed="true" IsShadow="true">
-                    <BodyTemplate>
-                        <div class="fw-bold mb-2">
-                            @item.Description
-                        </div>
-                        <div>
-                            <div>
-                                <span class="text-secondary">Status new:</span> @item.StatusNew
-                            </div>
-                            <div>
-                                <span class="text-secondary">Status in progress</span> @item.StatusInProgress
-                            </div>
-                            <div>
-                                <span class="text-secondary">Completed:</span> @item.StatusCompleted
-                            </div>
-                        </div>
-                    </BodyTemplate>
-                    <FooterTemplate>
-                        <div class="d-flex justify-content-between gap-2">
-                            <div class="">
-                                <button class="btn btn-danger" @onclick="() => OpenDeleteDialog(item)">Delete</button>
-                                <a href="EditToDoItem/@item.Id" class="btn btn-info">Edit</a>
-                            </div>
-                            <div class="d-flex justify-content-between gap-2">
-                                @if (item.Status != Api.Shared.Enums.ToDoItemStatus.New)
-                                {
-                                    <h4 class="m-0"><Button Color="Color.Danger" IsOutline="true" OnClick="() => ChangeStatus(item.Id, directionDown)">Undo</Button></h4>
-                                }
-                                @if (item.Status == Api.Shared.Enums.ToDoItemStatus.InProgress)
-                                {
-                                    <h4 class="m-0"><Button Color="Color.Success" OnClick="() => ChangeStatus(item.Id, directionUp)">Complete</Button></h4>
-                                }
-                                @if (item.Status == Api.Shared.Enums.ToDoItemStatus.New)
-                                {
-                                    <h4 class="m-0"><Button Color="Color.Success" IsOutline="true" OnClick="() => ChangeStatus(item.Id, directionUp)">Start TODO</Button></h4>
-                                }
-                            </div>
-                        </div>
-                    </FooterTemplate>
-                </Card>
-            }
+                    <CollapseItem Text="@status.ToString()">
+                        @foreach (var item in FilteredStatus(status))
+                        {
+                            <Card IsCollapsible="true" class="mb-2" HeaderText="@item.Name" Collapsed="true" IsShadow="true">
+                                <BodyTemplate>
+                                    <div class="fw-bold mb-2">
+                                        @item.Description
+                                    </div>
+                                    <div>
+                                        <div>
+                                            <span class="text-secondary">Status new:</span> @item.StatusNew
+                                        </div>
+                                        <div>
+                                            <span class="text-secondary">Status in progress</span> @item.StatusInProgress
+                                        </div>
+                                        <div>
+                                            <span class="text-secondary">Completed:</span> @item.StatusCompleted
+                                        </div>
+                                    </div>
+                                </BodyTemplate>
+                                <FooterTemplate>
+                                    <div class="d-flex justify-content-between gap-2">
+                                        <div class="">
+                                            <Button Color="Color.Danger" OnClick="() => OpenDeleteDialog(item)">Delete</Button>
+                                            <a href="EditToDoItem/@item.Id" class="btn btn-info">Edit</a>
+                                        </div>
+                                        <div class="d-flex justify-content-between gap-2">
+                                            @if (item.Status != Api.Shared.Enums.ToDoItemStatus.New)
+                                            {
+                                                <Button Color="Color.Danger" IsOutline="true" OnClick="() => ChangeStatus(item.Id, directionDown)">Undo</Button>
+                                            }
+                                            @if (item.Status == Api.Shared.Enums.ToDoItemStatus.InProgress)
+                                            {
+                                                <Button Color="Color.Success" OnClick="() => ChangeStatus(item.Id, directionUp)">Complete</Button>
+                                            }
+                                            @if (item.Status == Api.Shared.Enums.ToDoItemStatus.New)
+                                            {
+                                                <Button Color="Color.Success" IsOutline="true" OnClick="() => ChangeStatus(item.Id, directionUp)">Start TODO</Button>
+                                            }
+                                        </div>
+                                    </div>
+                                </FooterTemplate>
+                            </Card>
+                        }
                     </CollapseItem>
-            </CollapseItems>
+                </CollapseItems>
             </Collapse>
         </div>
     }

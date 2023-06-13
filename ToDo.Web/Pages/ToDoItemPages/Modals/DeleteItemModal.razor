@@ -5,13 +5,13 @@
         <div class="modal-content">
         <div class="modal-header">
             <h4>Delete TODO</h4>
-            <button type="button" class="close" @onclick="ModalCancel">&times;</button>
+                <button type="button" class="btn-close" aria-label="Close" @onclick="ModalCancel"></button>
         </div>
         <div class="modal-body">
             Are you sure to delete TODO?
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" @onclick="ModalCancel">Close</button>
+            <Button Color="Color.Secondary" Text="Close" @onclick="ModalCancel"></Button>
             <button type="button" class="btn btn-danger" @onclick="ModalOk">Confirm</button>
         </div>
         </div>
