@@ -16,9 +16,7 @@ namespace ToDo.Web.Pages.ToDoItemPages
 
         [Inject]
         IToDoItemService ToDoItemService { get; set; }
-
         public ToDoItemDto ToDoItemDto { get; set; }
-
         private ToDoItemDto ToDoItemToDelete { get; set; }
 
         [Parameter]
