@@ -3,6 +3,7 @@ using ToDo.Models.Payloads;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Components.Forms;
 using System.ComponentModel.DataAnnotations;
+using BootstrapBlazor.Components;
 
 namespace ToDo.Web.Pages.ToDoItemPages
 {
@@ -10,6 +11,7 @@ namespace ToDo.Web.Pages.ToDoItemPages
     {
         public string name;
         public string description;
+        public List<CheckboxItem> checkboxes = new List<CheckboxItem>();
         [Inject]
         private HttpClient httpClient { get; set; }
         [Inject]
@@ -20,12 +22,23 @@ namespace ToDo.Web.Pages.ToDoItemPages
             httpClient = new HttpClient();
         }
 
+        public void AddCheckbox()
+        {
+            checkboxes.Add(new CheckboxItem());
+        }
+
+        public void RemoveCheckbox(CheckboxItem checkbox)
+        {
+            checkboxes.Remove(checkbox);
+        }
+
         public async Task AddNewToDO()
         {
             var newTODO = new ToDoItemPayload
             {
                 Name = name,
                 Description = description,
+                Checkboxes = checkboxes
             };
 
             var validationContext = new ValidationContext(newTODO);
@@ -39,16 +52,17 @@ namespace ToDo.Web.Pages.ToDoItemPages
                 {
                     name = string.Empty;
                     description = string.Empty;
+                    checkboxes = new List<CheckboxItem>();
                     navigationManager.NavigateTo("/");
                 }
                 else
                 {
-                    Console.WriteLine(response.StatusCode);
+                    System.Console.WriteLine(response.StatusCode);
                 }
             }
             else
             {
-                Console.WriteLine("Validation Failed");
+                System.Console.WriteLine("Validation Failed");
             }
         }
     }

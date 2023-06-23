@@ -14,6 +14,20 @@
             <label for="description">Description</label>
             <Textarea id="description" class="form-control" placeholder="Description" rows="2" @bind-Value="description" />
         </div>
+        <div class="form-group d-flex flex-column gap-2">
+            <h5>Checkboxes</h5>
+            @foreach (var checkbox in checkboxes)
+            {
+                <label class="form-label">Description</label>
+                <div class="d-flex flex-row gap-2">
+                    <input class="form-control w-50" type="text" @bind="@checkbox.Description" />
+                    <button class="btn btn-danger btn-sm" @onclick="() => RemoveCheckbox(checkbox)">Remove</button>
+                </div>
+            }
+            <div>
+                <button class="btn btn-secondary btn-sm mt-2" @onclick="AddCheckbox">Add Checkbox</button>
+            </div>
+        </div>
     </div>
     <div class="card-footer">
         <button class="btn btn-primary" @onclick="AddNewToDO">Add TODO</button>

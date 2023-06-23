@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using ToDo.Api.Shared.Enums;
 using ToDo.Data.Data;
 using ToDo.Models.Entities;
@@ -18,7 +19,7 @@ namespace ToDo.Repositories.Repositories
 
         public async Task<ToDoItem> ChangeStatus(int id, string direction)
         {
-            var toDo = await this.blazorToDoContext.ToDoItems.FirstOrDefaultAsync(x => x.Id == id);
+            var toDo = await blazorToDoContext.ToDoItems.Include(x => x.Checkboxes).FirstOrDefaultAsync(x => x.Id == id);
             if(direction == "up")
             {
                 switch(toDo.Status)
@@ -58,25 +59,27 @@ namespace ToDo.Repositories.Repositories
                 }
             }
 
-            await this.blazorToDoContext.SaveChangesAsync();
+            blazorToDoContext.ToDoItems.Update(toDo);
+            await blazorToDoContext.SaveChangesAsync();
             return toDo;
         }
 
         public async Task DeleteItem(ToDoItem toDoItem)
         {
-            this.blazorToDoContext.ToDoItems.Remove(toDoItem);
-            await this.blazorToDoContext.SaveChangesAsync();
+            blazorToDoContext.RemoveRange(toDoItem.Checkboxes);
+            blazorToDoContext.Remove(toDoItem);
+            await blazorToDoContext.SaveChangesAsync();
         }
 
         public async Task<ToDoItem> GetItem(int id)
         {
-            var item = await this.blazorToDoContext.ToDoItems.FirstOrDefaultAsync(x => x.Id == id);
+            var item = await blazorToDoContext.ToDoItems.Include(x => x.Checkboxes).FirstOrDefaultAsync(x => x.Id == id);
             return item;
         }
 
         public async Task<IEnumerable<ToDoItem>> GetItems()
         {
-            var items = await this.blazorToDoContext.ToDoItems.ToListAsync();
+            var items = await blazorToDoContext.ToDoItems.Include(x => x.Checkboxes).ToListAsync();
             return items;
         }
 
@@ -88,6 +91,11 @@ namespace ToDo.Repositories.Repositories
                 Description = toDoItemPayload.Description,
                 Status = ToDoItemStatus.New,
                 StatusNew = DateTime.Now,
+                Checkboxes = toDoItemPayload.Checkboxes.Select(x => new Models.Entities.CheckboxItem
+                {
+                    IsChecked = false,
+                    Description = x.Description
+                }).ToList()
             };
 
             if (item == null)
@@ -96,19 +104,51 @@ namespace ToDo.Repositories.Repositories
             }
             else
             {
-                var result = await this.blazorToDoContext.ToDoItems.AddAsync(item);
-                await this.blazorToDoContext.SaveChangesAsync();
+                var result = await blazorToDoContext.ToDoItems.AddAsync(item);
+                await blazorToDoContext.SaveChangesAsync();
                 return result.Entity;
             }
         }
 
         public async Task<ToDoItem> UpdateItem(ToDoItem toDoItem, ToDoItemPayload toDoItemPayload)
         {
-            var item = await this.blazorToDoContext.ToDoItems.FirstOrDefaultAsync(x => x.Id == toDoItem.Id);
+            var item = await blazorToDoContext.ToDoItems.Include(x => x.Checkboxes).FirstAsync(x => x.Id == toDoItem.Id);
+            var checkboxes = blazorToDoContext.Checkboxes.Where(x => x.ToDoItemId == toDoItem.Id).ToList();
+
+            foreach (var checkbox in checkboxes)
+            {
+                var checkboxToUpdate = toDoItemPayload.Checkboxes.FirstOrDefault(x => x.Id == checkbox.Id);
+                if (checkboxToUpdate != null)
+                {
+                    checkbox.IsChecked = checkboxToUpdate.IsChecked;
+                    checkbox.Description = checkboxToUpdate.Description;
+                }
+                else
+                {
+                    blazorToDoContext.Checkboxes.Remove(checkbox);
+                }
+            }
+
+            foreach (var checkbox in toDoItemPayload.Checkboxes)
+            {
+                if(checkbox.Id == 0)
+                {
+                    var newCheckbox = new Models.Entities.CheckboxItem
+                    {
+                        IsChecked = checkbox.IsChecked,
+                        Description = checkbox.Description,
+                    };
+                    item.Checkboxes.Add(newCheckbox);
+                }
+            }
+
+
             item.Name = toDoItemPayload.Name;
             item.Description = toDoItemPayload.Description;
             item.Status = toDoItem.Status;
-            await this.blazorToDoContext.SaveChangesAsync();
+
+            blazorToDoContext.ToDoItems.Update(item);
+            await blazorToDoContext.SaveChangesAsync();
             return item;
         }
     }

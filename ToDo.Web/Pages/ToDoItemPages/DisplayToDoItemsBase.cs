@@ -5,7 +5,6 @@ using ToDo.Api.Shared.Enums;
 using ToDo.Models.Dtos;
 using ToDo.Models.Payloads;
 using ToDo.Services.Services.Contracts;
-using ToDo.Web.Pages.ToDoItemPages.Modals;
 
 namespace ToDo.Web.Pages.ToDoItemPages
 {
@@ -66,6 +65,27 @@ namespace ToDo.Web.Pages.ToDoItemPages
         {
             ToDoItemToDelete = todo;
             DeleteDialogOpen = true;
+        }
+
+        public async Task UpdateCheckbox(int toDoId, int checkboxId)
+        {
+            ToDoItemDto = await ToDoItemService.GetItem(toDoId);
+            var checkbox = ToDoItemDto.Checkboxes.Find(x => x.Id == checkboxId);
+
+            if(checkbox.IsChecked == true)
+            {
+                checkbox.IsChecked = false;
+            } else if (checkbox.IsChecked == false)
+            {
+                checkbox.IsChecked = true;
+            }
+
+            var response = await httpClient.PutAsJsonAsync($"https://localhost:7265/api/ToDoItem/{toDoId}", ToDoItemDto);
+
+            if (response.IsSuccessStatusCode)
+            {
+                ToDoItemDtos = await ToDoItemService.GetItems();
+            }
         }
     }
 }

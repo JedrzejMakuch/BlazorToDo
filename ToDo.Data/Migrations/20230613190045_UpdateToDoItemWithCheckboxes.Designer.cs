@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ToDo.Data.Data;
 
@@ -11,9 +12,10 @@ using ToDo.Data.Data;
 namespace ToDo.Data.Migrations
 {
     [DbContext(typeof(BlazorToDoDbContext))]
-    partial class BlazorToDoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230613190045_UpdateToDoItemWithCheckboxes")]
+    partial class UpdateToDoItemWithCheckboxes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,14 +39,14 @@ namespace ToDo.Data.Migrations
                     b.Property<bool>("IsChecked")
                         .HasColumnType("bit");
 
-                    b.Property<int>("ToDoItemId")
+                    b.Property<int?>("ToDoItemId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ToDoItemId");
 
-                    b.ToTable("Checkboxes");
+                    b.ToTable("CheckboxItem");
                 });
 
             modelBuilder.Entity("ToDo.Models.Entities.ToDoItem", b =>
@@ -82,13 +84,9 @@ namespace ToDo.Data.Migrations
 
             modelBuilder.Entity("ToDo.Models.Entities.CheckboxItem", b =>
                 {
-                    b.HasOne("ToDo.Models.Entities.ToDoItem", "ToDoItem")
+                    b.HasOne("ToDo.Models.Entities.ToDoItem", null)
                         .WithMany("Checkboxes")
-                        .HasForeignKey("ToDoItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ToDoItem");
+                        .HasForeignKey("ToDoItemId");
                 });
 
             modelBuilder.Entity("ToDo.Models.Entities.ToDoItem", b =>

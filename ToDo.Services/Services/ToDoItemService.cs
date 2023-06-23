@@ -1,6 +1,5 @@
 ﻿using System.Net.Http.Json;
 using ToDo.Models.Dtos;
-using ToDo.Models.Entities;
 using ToDo.Models.Payloads;
 using ToDo.Services.Services.Contracts;
 

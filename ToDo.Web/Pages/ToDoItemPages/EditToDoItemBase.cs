@@ -1,10 +1,9 @@
-﻿using BootstrapBlazor.Components;
-using Microsoft.AspNetCore.Components;
-using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Components;
 using System.Net.Http.Json;
 using ToDo.Models.Dtos;
 using ToDo.Models.Payloads;
 using ToDo.Services.Services.Contracts;
+using CheckboxItem = ToDo.Models.Payloads.CheckboxItem;
 
 namespace ToDo.Web.Pages.ToDoItemPages
 {
@@ -12,6 +11,7 @@ namespace ToDo.Web.Pages.ToDoItemPages
     {
         public string name;
         public string description;
+        public List<CheckboxItem> checkboxes = new List<CheckboxItem>();
 
         [Parameter]
         public int Id { get; set; }
@@ -33,13 +33,29 @@ namespace ToDo.Web.Pages.ToDoItemPages
             try
             {
                 ToDoItemDto = await ToDoItemService.GetItem(Id);
-                description= ToDoItemDto.Description;
-                name= ToDoItemDto.Name;
+                description = ToDoItemDto.Description;
+                name = ToDoItemDto.Name;
+                checkboxes = ToDoItemDto.Checkboxes.Select(x => new CheckboxItem
+                {
+                    Description = x.Description,
+                    Id = x.Id,
+                    IsChecked = x.IsChecked
+                }).ToList();
             }
             catch (Exception ex)
             {
                 ErrorMessage = ex.Message;
             }
+        }
+
+        public void RemoveCheckbox(CheckboxItem checkbox)
+        {
+            checkboxes.Remove(checkbox);
+        }
+
+        public void AddCheckbox()
+        {
+            checkboxes.Add(new CheckboxItem());
         }
 
         public async Task SaveToDo()
@@ -48,32 +64,22 @@ namespace ToDo.Web.Pages.ToDoItemPages
             {
                 Description = description,
                 Name = name,
+                Checkboxes = checkboxes
             };
 
-            var validationContext = new ValidationContext(editToDo);
-            var validationMessages = new List<ValidationResult>();
+            var response = await httpClient.PutAsJsonAsync($"https://localhost:7265/api/ToDoItem/{Id}", editToDo);
 
-            if (Validator.TryValidateObject(editToDo, validationContext, validationMessages))
+            if (response.IsSuccessStatusCode)
             {
-                var response = await httpClient.PutAsJsonAsync($"https://localhost:7265/api/ToDoItem/{Id}", editToDo);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    name = string.Empty;
-                    description = string.Empty;
-                    navigationManager.NavigateTo($"/");
-                }
-                else
-                {
-                    System.Console.WriteLine(response.StatusCode);
-                }
+                name = string.Empty;
+                description = string.Empty;
+                checkboxes = new List<CheckboxItem>();
+                navigationManager.NavigateTo($"/");
             }
             else
             {
-                System.Console.WriteLine("Validation Failed");
+                System.Console.WriteLine(response.StatusCode);
             }
         }
-
-        
     }
 }
