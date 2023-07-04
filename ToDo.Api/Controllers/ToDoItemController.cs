@@ -94,7 +94,7 @@ namespace ToDo.Api.Controllers
                 var item = await toDoItemService.GetItem(id);
                 if (item == null)
                 {
-
+                    return NotFound();
                 }
 
                 await toDoItemService.DeleteItem(item);
