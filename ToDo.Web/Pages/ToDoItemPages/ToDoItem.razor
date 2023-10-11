@@ -12,11 +12,11 @@ else
     var toDoItemsCount = ToDoItemDtos.Count();
     
     <div class="">
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between align-items-center" id="header-title">
             <h3>
-                ToDo Items
+                My TODO List
             </h3>
-            <a href="/AddToDoItem" class="btn btn-primary m-2">New ToDo</a>
+            <a href="/AddToDoItem" class="btn btn-primary m-2">New TODO</a>
         </div>
         <div class="">
             @if (toDoItemsCount > 0)

@@ -5,3 +5,9 @@
 .sidebar {
     border-right: 2px solid white;
 }
+
+#header-title h3 {
+    color: white;
+    padding: 0px;
+    margin-bottom: 0px;
+}
