@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using System.ComponentModel.DataAnnotations;
 using System.Net.Http.Json;
 using ToDo.Models.Dtos;
 using ToDo.Models.Payloads;
@@ -9,10 +10,6 @@ namespace ToDo.Web.Pages.ToDoItemPages
 {
     public class EditToDoItemBase : ComponentBase
     {
-        public string name;
-        public string description;
-        public List<CheckboxItem> checkboxes = new List<CheckboxItem>();
-
         [Parameter]
         public int Id { get; set; }
 
@@ -24,8 +21,14 @@ namespace ToDo.Web.Pages.ToDoItemPages
 
         [Inject]
         private NavigationManager navigationManager { get; set; }
+
         public ToDoItemDto ToDoItemDto { get; set; }
+
+        public ToDoItemPayload payload = new ToDoItemPayload();
         public string ErrorMessage { get; set; }
+
+        public List<ValidationResult> validationResults;
+        public List<ValidationResult> validationResultsCheckboxes;
 
         protected override async Task OnInitializedAsync()
         {
@@ -33,13 +36,14 @@ namespace ToDo.Web.Pages.ToDoItemPages
             try
             {
                 ToDoItemDto = await ToDoItemService.GetItem(Id);
-                description = ToDoItemDto.Description;
-                name = ToDoItemDto.Name;
-                checkboxes = ToDoItemDto.Checkboxes.Select(x => new CheckboxItem
+                payload.Description = ToDoItemDto.Description;
+                payload.Name = ToDoItemDto.Name;
+                payload.Checkboxes = ToDoItemDto.Checkboxes.Select(x => new CheckboxItem
                 {
                     Description = x.Description,
                     Id = x.Id,
-                    IsChecked = x.IsChecked
+                    IsChecked = x.IsChecked,
+                    ValidationResults = new List<ValidationResult>()
                 }).ToList();
             }
             catch (Exception ex)
@@ -50,36 +54,72 @@ namespace ToDo.Web.Pages.ToDoItemPages
 
         public void RemoveCheckbox(CheckboxItem checkbox)
         {
-            checkboxes.Remove(checkbox);
+            payload.Checkboxes.Remove(checkbox);
         }
 
         public void AddCheckbox()
         {
-            checkboxes.Add(new CheckboxItem());
+            payload.Checkboxes.Add(new CheckboxItem
+            {
+                ValidationResults = new List<ValidationResult>()
+            });
         }
 
         public async Task SaveToDo()
         {
-            var editToDo = new ToDoItemPayload()
-            {
-                Description = description,
-                Name = name,
-                Checkboxes = checkboxes
-            };
+            validationResults = Validate(payload);
 
-            var response = await httpClient.PutAsJsonAsync($"https://localhost:7265/api/ToDoItem/{Id}", editToDo);
+            foreach (var checkbox in payload.Checkboxes)
+            {
+                checkbox.ValidationResults = ValidateCheckbox(checkbox);
+            }
 
-            if (response.IsSuccessStatusCode)
+            var allValidationResults = payload.Checkboxes.SelectMany(c => c.ValidationResults).ToList();
+
+            if (validationResults.Count == 0 && allValidationResults.Count == 0)
             {
-                name = string.Empty;
-                description = string.Empty;
-                checkboxes = new List<CheckboxItem>();
-                navigationManager.NavigateTo($"/");
+                var editToDo = new ToDoItemPayload()
+                {
+                    Description = payload.Description,
+                    Name = payload.Name,
+                    Checkboxes = payload.Checkboxes
+                };
+
+                var response = await httpClient.PutAsJsonAsync($"https://localhost:7265/api/ToDoItem/{Id}", editToDo);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    payload.Name = string.Empty;
+                    payload.Description = string.Empty;
+                    payload.Checkboxes = new List<CheckboxItem>();
+                    navigationManager.NavigateTo($"/");
+                }
+                else
+                {
+                    System.Console.WriteLine(response.StatusCode);
+                    System.Console.WriteLine("response failed");
+                }
             }
-            else
-            {
-                System.Console.WriteLine(response.StatusCode);
-            }
+        }
+
+        public List<ValidationResult> Validate(ToDoItemPayload newToDo)
+        {
+            var validationMessage = new List<ValidationResult>();
+            var validationContext = new ValidationContext(newToDo);
+
+            Validator.TryValidateObject(newToDo, validationContext, validationMessage);
+
+            return validationMessage;
+        }
+
+        public List<ValidationResult> ValidateCheckbox(CheckboxItem checkbox)
+        {
+            var validationMessage = new List<ValidationResult>();
+
+            var validationContext = new ValidationContext(checkbox);
+            Validator.TryValidateObject(checkbox, validationContext, validationMessage);
+
+            return validationMessage;
         }
     }
 }

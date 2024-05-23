@@ -16,7 +16,11 @@ namespace ToDo.Models.Payloads
     public class CheckboxItem
     {
         public int Id { get; set; }
+
+        [Required(ErrorMessage = "Description is required.")]
         public string Description { get; set; }
         public bool IsChecked { get; set; }
+
+        public List<ValidationResult> ValidationResults { get; set; }
     }
 }

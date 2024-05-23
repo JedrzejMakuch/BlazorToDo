@@ -57,6 +57,10 @@ namespace ToDo.Web.Pages.ToDoItemPages
                     Console.WriteLine(response.StatusCode);
                 }
             }
+            else
+            {
+                StateHasChanged();
+            }
         }
 
         public List<ValidationResult> Validate(ToDoItemPayload newToDo)
