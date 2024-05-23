@@ -7,6 +7,7 @@ namespace ToDo.Models.Payloads
     {
         [Required(ErrorMessage = "Name is required.")]
         public string Name { get; set; }
+
         [Required(ErrorMessage = "Description is required.")]
         public string Description { get; set; }
         public ToDoItemStatus? Status { get; set; }

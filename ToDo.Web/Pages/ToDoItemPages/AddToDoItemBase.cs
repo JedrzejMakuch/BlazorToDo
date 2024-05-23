@@ -1,21 +1,21 @@
 ﻿using Microsoft.AspNetCore.Components;
-using ToDo.Models.Payloads;
-using System.Net.Http.Json;
-using Microsoft.AspNetCore.Components.Forms;
 using System.ComponentModel.DataAnnotations;
-using BootstrapBlazor.Components;
+using System.Net.Http.Json;
+using ToDo.Models.Payloads;
 
 namespace ToDo.Web.Pages.ToDoItemPages
 {
     public class AddToDoItemBase : ComponentBase
     {
-        public string name;
-        public string description;
         public List<CheckboxItem> checkboxes = new List<CheckboxItem>();
         [Inject]
         private HttpClient httpClient { get; set; }
         [Inject]
         private NavigationManager navigationManager { get; set; }
+
+        public List<ValidationResult> validationResults;
+
+        public ToDoItemPayload payload = new ToDoItemPayload();
 
         protected override void OnInitialized()
         {
@@ -34,36 +34,39 @@ namespace ToDo.Web.Pages.ToDoItemPages
 
         public async Task AddNewToDO()
         {
-            var newTODO = new ToDoItemPayload
-            {
-                Name = name,
-                Description = description,
-                Checkboxes = checkboxes
-            };
+            validationResults = Validate(payload);
 
-            var validationContext = new ValidationContext(newTODO);
-            var validationMessages = new List<ValidationResult>();
-
-            if(Validator.TryValidateObject(newTODO, validationContext, validationMessages))
+            if (payload.Checkboxes == null)
             {
-                var response = await httpClient.PostAsJsonAsync("https://localhost:7265/api/ToDoItem", newTODO);
+                payload.Checkboxes = new List<CheckboxItem>();
+            }
+
+            if (validationResults.Count == 0)
+            {
+                var response = await httpClient.PostAsJsonAsync("https://localhost:7265/api/ToDoItem", payload);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    name = string.Empty;
-                    description = string.Empty;
+                    payload.Name = string.Empty;
+                    payload.Description = string.Empty;
                     checkboxes = new List<CheckboxItem>();
                     navigationManager.NavigateTo("/");
                 }
                 else
                 {
-                    System.Console.WriteLine(response.StatusCode);
+                    Console.WriteLine(response.StatusCode);
                 }
             }
-            else
-            {
-                System.Console.WriteLine("Validation Failed");
-            }
+        }
+
+        public List<ValidationResult> Validate(ToDoItemPayload newToDo)
+        {
+            var validationMessage = new List<ValidationResult>();
+            var validationContext = new ValidationContext(newToDo);
+
+            Validator.TryValidateObject(newToDo, validationContext, validationMessage);
+
+            return validationMessage;
         }
     }
 }
